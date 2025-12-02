@@ -1,6 +1,8 @@
 #include "esp_camera.h"
 #include <esp_now.h>
 #include <WiFi.h>
+#include "src/constant.h"
+
 // WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
 //            Ensure ESP32 Wrover Module or other board with PSRAM is selected
 //            Partial images will be transmitted if image exceeds buffer size
@@ -10,14 +12,6 @@
 //            seconds to process single frame. Face Detection is ENABLED if PSRAM is enabled as well
 #define CAMERA_MODEL_XIAO_ESP32S3 // Has PSRAM
 #include "src/camera_pins.h"
-// Station（親）の STAモードMACアドレス
-uint8_t stationAddress[] = {0xA0, 0xB7, 0x65, 0x58, 0x7A, 0xFC};
-// データ構造体
-typedef struct struct_message {
-  //int command;
-  float voltage;
-} struct_message;
-struct_message sendData;
 //struct_message recvData;
 
 // ===== 送信完了コールバック =====
@@ -32,6 +26,8 @@ void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println();
+  ledcAttachChannel(in1, freq, resolution,ch1);
+  ledcAttachChannel(in2, freq, resolution,ch2);
   config();
   APSTA();
   nowpeer();
@@ -44,6 +40,7 @@ void setup() {
 }
 
 void loop() {
+  forward(180);
   readV();
   // Do nothing. Everything is done in another task by the web server
   delay(500);
