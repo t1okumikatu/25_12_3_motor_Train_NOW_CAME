@@ -10,6 +10,16 @@ typedef struct struct_message {
 } struct_message;
 struct_message sendData;
 //struct_message recvData;
+
+//// Station→Trainへデータ（電圧＋フラグ）
+typedef struct struct_return {
+  float newvoltage;
+  uint8_t flag;
+  uint16_t Send1;
+} struct_return;
+struct_return recvData;
+
+
 uint32_t pwm;
 const int VALUE_MAX = 255;      // PWMの最大値
 const int ledPin =6;

@@ -13,7 +13,21 @@
 #define CAMERA_MODEL_XIAO_ESP32S3 // Has PSRAM
 #include "src/camera_pins.h"
 //struct_message recvData;
-
+// ===== 受信コールバック =====
+void OnDataRecv(const esp_now_recv_info *info, const uint8_t *incomingData, int len) {
+  memcpy(&recvData, incomingData, sizeof(recvData));
+  Serial.println("recv.newvoltage");
+  Serial.println(recvData.newvoltage);
+  switch (recvData.flag) {
+    case 0: Serial.println("停止");
+    brake(); break;
+    case 1: Serial.println("前進"); 
+    forward(170);break;
+    case 2: Serial.println("後退"); 
+    reverse(150); break;
+    default: break;
+  }
+}
 // ===== 送信完了コールバック =====
 void OnDataSent(const wifi_tx_info_t *info, esp_now_send_status_t status) {
   //Serial.print("Send Status: ");
@@ -30,7 +44,7 @@ void setup() {
   ledcAttachChannel(in2, freq, resolution,ch2);
   config();
   APSTA();
-  nowpeer();
+  StatiNowpeer();
   startCameraServer();
 
   //Serial.print("Camera Ready! Use 'http://  ");
@@ -40,7 +54,7 @@ void setup() {
 }
 
 void loop() {
-  forward(180);
+  //forward(180);
   readV();
   // Do nothing. Everything is done in another task by the web server
   delay(500);
