@@ -1,7 +1,7 @@
 #include "esp_camera.h"
 #include <esp_now.h>
 #include <WiFi.h>
-#include "src/constant.h"
+#include "constant.h"
 
 // WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
 //            Ensure ESP32 Wrover Module or other board with PSRAM is selected
